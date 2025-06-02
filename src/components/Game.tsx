@@ -47,11 +47,16 @@ export default function Game({ words }: GameProps) {
   const handleCorrect = () => {
     playCorrect();
     setTimeout(() => {
-      const randomWord = words[Math.floor(Math.random() * words.length)];
+      // 确保下一个单词不重复
+      let randomWord;
+      do {
+        randomWord = words[Math.floor(Math.random() * words.length)];
+      } while (randomWord.english === currentWord?.english && words.length > 1);
+
       setCurrentWord(randomWord);
       setIsAnswerTipVisible(false);
       setWrongCount(0);
-    }, 500);
+    }, 300);
   };
 
   const handleWrong = () => {
@@ -64,6 +69,8 @@ export default function Game({ words }: GameProps) {
       }
       return prev + 1;
     });
+    // 清空输入框
+    setCurrentWord({ ...currentWord! });
   };
 
   const handleShowAnswer = () => {
