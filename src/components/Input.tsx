@@ -105,7 +105,15 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
     } else {
       markIncorrectWords();
       onWrong?.();
-      setInputValue(""); // 直接在这里清空输入框
+      // 延迟后重置错误状态
+      setTimeout(() => {
+        setInputValue(""); // 清空输入框
+        const resetParts = [...wordParts];
+        resetParts.forEach((part) => {
+          part.incorrect = false;
+        });
+        setWordParts(resetParts);
+      }, 580);
     }
   };
 
