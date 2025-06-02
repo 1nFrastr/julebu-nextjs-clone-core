@@ -14,12 +14,6 @@ export default function AnswerTip({ word, onClose }: AnswerTipProps) {
 
   return (
     <div className="pointer-events-auto absolute -top-24 left-1/2 z-20 w-full -translate-x-1/2 transform">
-      <button
-        onClick={onClose}
-        className="absolute -right-2 -top-2 text-gray-400 hover:text-gray-600"
-      >
-        ×
-      </button>
       <div className="text-center">
         <div className="inline-flex flex-wrap items-center justify-center gap-1 text-2xl text-gray-600">
           {words.map((w, index) => (
@@ -35,7 +29,6 @@ export default function AnswerTip({ word, onClose }: AnswerTipProps) {
               {w}
             </span>
           ))}
-          <SoundPlayer text={word.english} />
         </div>
       </div>
     </div>

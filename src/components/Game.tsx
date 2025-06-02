@@ -95,10 +95,7 @@ export default function Game({ words }: GameProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 text-center text-2xl text-gray-600">
-        {currentWord.chinese}
-        <SoundPlayer text={currentWord.english} />
-      </div>
+      <div className="mb-8 text-center text-2xl text-gray-600">{currentWord.chinese}</div>
 
       <div className="relative">
         {isAnswerTipVisible && (
