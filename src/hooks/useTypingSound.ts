@@ -48,8 +48,8 @@ export function useTypingSound({ enabled = true }: UseTypingSoundParams = {}) {
   };
 
   const checkPlayTypingSound = (e: React.KeyboardEvent) => {
-    // Only play sound for regular character input
-    if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    // Play sound for regular character input and backspace
+    if ((e.key.length === 1 || e.key === "Backspace") && !e.ctrlKey && !e.altKey && !e.metaKey) {
       playTypingSound();
       return true;
     }
