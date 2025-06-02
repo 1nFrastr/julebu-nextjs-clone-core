@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
 // 模拟TTS服务,实际项目中应该使用真实的TTS服务
-const mockSpeak = (text: string) => {
-  if ('speechSynthesis' in window) {
+export const mockSpeak = (text: string) => {
+  if ("speechSynthesis" in window) {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
+    utterance.lang = "en-US";
     speechSynthesis.speak(utterance);
   }
 };
@@ -16,7 +16,7 @@ interface SoundPlayerProps {
   className?: string;
 }
 
-export default function SoundPlayer({ text, className = '' }: SoundPlayerProps) {
+export default function SoundPlayer({ text, className = "" }: SoundPlayerProps) {
   const handlePlay = useCallback(() => {
     mockSpeak(text);
   }, [text]);

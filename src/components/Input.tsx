@@ -100,12 +100,12 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
   const checkAnswer = () => {
     const userAnswer = inputValue.trim();
     const correctAnswer = word.english.trim();
-
     if (userAnswer === correctAnswer) {
       onCorrect();
     } else {
       markIncorrectWords();
       onWrong?.();
+      setInputValue(""); // 直接在这里清空输入框
     }
   };
 

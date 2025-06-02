@@ -7,6 +7,7 @@ import useSound from "use-sound";
 import AnswerTip from "./AnswerTip";
 import GamePauseModal from "./GamePauseModal";
 import Input from "./Input";
+import SoundPlayer, { mockSpeak } from "./SoundPlayer";
 
 interface GameProps {
   words: Word[];
@@ -27,6 +28,19 @@ export default function Game({ words }: GameProps) {
       setCurrentWord(randomWord);
     }
   }, [words]);
+
+  // 自动播放单词发音
+  useEffect(() => {
+    if (currentWord?.english) {
+      const isNewWord = words.some((w) => w.english === currentWord.english);
+      // 只有是新单词时才播放
+      if (isNewWord) {
+        setTimeout(() => {
+          mockSpeak(currentWord.english);
+        }, 100);
+      }
+    }
+  }, [currentWord?.english, words]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -69,8 +83,6 @@ export default function Game({ words }: GameProps) {
       }
       return prev + 1;
     });
-    // 清空输入框
-    setCurrentWord({ ...currentWord! });
   };
 
   const handleShowAnswer = () => {
@@ -83,7 +95,10 @@ export default function Game({ words }: GameProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 text-center text-2xl text-gray-600">{currentWord.chinese}</div>
+      <div className="mb-8 text-center text-2xl text-gray-600">
+        {currentWord.chinese}
+        <SoundPlayer text={currentWord.english} />
+      </div>
 
       <div className="relative">
         {isAnswerTipVisible && (
