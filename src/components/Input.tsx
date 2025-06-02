@@ -27,6 +27,11 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { checkPlayTypingSound } = useTypingSound();
 
+  // 自动聚焦输入框
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   // 初始化单词分割
   useEffect(() => {
     const parts = word.english.split(" ").map((text, id) => ({
@@ -49,6 +54,8 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
 
     setWordParts(parts);
     setInputValue("");
+    // 每次单词变更时重新聚焦
+    inputRef.current?.focus();
   }, [word]);
 
   // 输入值变化时更新各部分状态
@@ -112,26 +119,28 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
   };
 
   return (
-    <div className="relative">
-      <div className="flex flex-wrap justify-center gap-2 text-5xl">
-        {wordParts.map((part) => (
-          <div
-            key={part.id}
-            className={`min-w-[4ch] border-b-2 transition-all ${
-              part.isActive && !part.incorrect
-                ? "animate-pulse border-fuchsia-500 text-fuchsia-500"
-                : part.incorrect
-                  ? "animate-shake border-red-500 text-red-500"
-                  : "border-gray-300 text-gray-500"
-            }`}
-          >
-            {part.userInput}
-          </div>
-        ))}
+    <div className="relative mx-auto w-full max-w-4xl">
+      <div className="flex min-h-[120px] items-center justify-center">
+        <div className="pointer-events-none flex flex-wrap justify-center gap-4 text-5xl">
+          {wordParts.map((part) => (
+            <div
+              key={part.id}
+              className={`relative flex min-h-[60px] min-w-[4ch] items-center border-b-4 px-2 transition-all ${
+                part.isActive && !part.incorrect
+                  ? "border-fuchsia-500 text-fuchsia-500"
+                  : part.incorrect
+                    ? "border-red-500 text-red-500"
+                    : "border-gray-300 text-gray-500"
+              }`}
+            >
+              <span className="block min-w-[1ch]">{part.userInput || "\u00A0"}</span>
+            </div>
+          ))}
+        </div>
       </div>
       <input
         ref={inputRef}
-        className="absolute inset-0 opacity-0"
+        className="absolute inset-0 z-10 block h-full w-full cursor-text bg-transparent text-center text-5xl text-transparent caret-fuchsia-500 outline-none"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
