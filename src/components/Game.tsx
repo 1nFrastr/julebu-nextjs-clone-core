@@ -114,7 +114,7 @@ export default function Game({ words }: GameProps) {
   }
 
   if (!currentWord) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return (
@@ -138,13 +138,13 @@ export default function Game({ words }: GameProps) {
       <div className="mt-8 flex justify-center space-x-4">
         <button
           onClick={handleShowAnswer}
-          className="rounded-lg bg-gray-200 px-4 py-2 text-gray-700 hover:bg-gray-300"
+          className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
         >
           显示答案 (Ctrl+M)
         </button>
         <button
           onClick={() => setIsPaused(true)}
-          className="rounded-lg bg-gray-200 px-4 py-2 text-gray-700 hover:bg-gray-300"
+          className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
         >
           暂停 (Alt+P)
         </button>
