@@ -3,7 +3,7 @@
 import { sampleWords } from "@/data/words";
 import { generateWordList } from "@/services/openai";
 import { Word } from "@/types/word";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface DictionarySelectorProps {
   onSelect: (words: Word[]) => void;
@@ -15,6 +15,14 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState<"custom" | "local">("custom");
+  const [previewWords, setPreviewWords] = useState<Word[]>([]);
+
+  // 初始化预览单词
+  useEffect(() => {
+    // 打乱所有单词的顺序并选择前5个
+    const shuffledWords = [...sampleWords].sort(() => Math.random() - 0.5).slice(0, 5);
+    setPreviewWords(shuffledWords);
+  }, []);
 
   const handleLocalDictionary = () => {
     onSelect(sampleWords);
@@ -46,8 +54,6 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
     "我要面试跨境电商职位",
     "我要在超市购物",
   ];
-
-  const previewWords = sampleWords.slice(0, 3);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -123,21 +129,41 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
                 <h3 className="text-xl font-medium text-blue-400">本地词库预览</h3>
                 <p className="mt-2 text-sm text-gray-400">包含基础常用词汇，适合日常学习</p>
               </div>
-
+              
               <div className="flex flex-wrap justify-center gap-4">
                 {previewWords.map((word, index) => (
                   <div
-                    key={word.english}
-                    className="flex animate-pulse flex-col items-center space-y-1 rounded-lg border border-blue-500/20 bg-blue-500/5 p-3"
-                    style={{ animationDelay: `${index * 200}ms` }}
+                    key={`${word.english}-${index}`}
+                    className="relative flex flex-col items-center space-y-1 rounded-lg border border-blue-500/20 bg-blue-500/5 p-3"
+                    style={{
+                      animation: `breathe ${2 + index * 0.5}s ease-in-out infinite`,
+                    }}
                   >
                     <span className="text-lg font-medium text-blue-300">{word.english}</span>
                     <span className="text-sm text-gray-400">{word.chinese}</span>
+                    <div 
+                      className="absolute inset-0 rounded-lg bg-blue-400/5"
+                      style={{
+                        animation: `glow ${3 + index * 0.7}s ease-in-out infinite`,
+                        animationDelay: `${index * 0.5}s`
+                      }}
+                    />
                   </div>
                 ))}
               </div>
             </div>
 
+            <style jsx>{`
+              @keyframes breathe {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+              }
+              @keyframes glow {
+                0%, 100% { opacity: 0; }
+                50% { opacity: 1; }
+              }
+            `}</style>
+            
             <div className="absolute left-0 top-0 h-full w-1/2 animate-[pulse_4s_infinite] bg-gradient-to-r from-transparent via-blue-500/5 to-transparent"></div>
           </div>
         )}
