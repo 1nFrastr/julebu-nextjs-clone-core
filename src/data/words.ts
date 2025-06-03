@@ -36,7 +36,6 @@ export const sampleWords: Word[] = [
     chinese: "西瓜",
     soundmark: "/ˈwɔːtəmelən/",
   },
-  // 日常用品
   {
     english: "book",
     chinese: "书",
@@ -87,7 +86,6 @@ export const sampleWords: Word[] = [
     chinese: "学校",
     soundmark: "/skuːl/",
   },
-  // 颜色
   {
     english: "red",
     chinese: "红色",
