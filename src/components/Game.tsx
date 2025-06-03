@@ -109,9 +109,6 @@ export default function Game({ words: initialWords }: GameProps) {
   if (!isStarted) {
     return (
       <div>
-        <h1 className="mb-8 text-center text-3xl font-bold text-gray-700">
-          🌟 欢迎来到单词闯关 🌟
-        </h1>
         <DictionarySelector onSelect={handleDictionarySelect} />
       </div>
     );

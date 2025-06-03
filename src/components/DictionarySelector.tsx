@@ -62,7 +62,7 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
               type="text"
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-              placeholder="输入主题（如：打车、酒店、考托福雅思等）"
+              placeholder="请输入你想学习的情景"
               className="w-full rounded-lg border border-gray-300 px-4 py-2 text-lg transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
             />
             <div className="mt-2 flex flex-wrap justify-center gap-2">
