@@ -12,8 +12,8 @@ export type GenerateWordListResponse = {
 
 // 自定义配置初始化
 const config: ClientOptions = {
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || "",
-  baseURL: process.env.NEXT_PUBLIC_OPENAI_API_BASE_URL,
+  apiKey: "hk-8lze3v36h734mq6ckgqw2hvs7ej8tjdc7abume6sbe2ki5rt",
+  baseURL: "https://api.openai-hk.com/v1",
   timeout: 30000, // 30秒超时
   maxRetries: 3, // 最大重试次数
   dangerouslyAllowBrowser: true, // 允许在浏览器环境中使用
@@ -62,10 +62,6 @@ export async function generateWordList(
   topic: string,
   count: number,
 ): Promise<GenerateWordListResponse> {
-  if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
-    throw new Error("未配置 OpenAI API 密钥");
-  }
-
   const prompt = WORD_LIST_PROMPT.replace("{{topic}}", topic).replace("{{count}}", String(count));
 
   try {
