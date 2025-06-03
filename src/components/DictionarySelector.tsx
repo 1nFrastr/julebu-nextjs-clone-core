@@ -11,7 +11,7 @@ interface DictionarySelectorProps {
 
 export default function DictionarySelector({ onSelect }: DictionarySelectorProps) {
   const [topic, setTopic] = useState("");
-  const [wordCount, setWordCount] = useState(10);
+  const [wordCount, setWordCount] = useState(20);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState<"custom" | "local">("custom");
@@ -60,13 +60,7 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
     }
   };
 
-  const suggestedTopics = [
-    "我要预约酒店",
-    "我要订机票",
-    "我要参加学术会议",
-    "我要面试跨境电商职位",
-    "我要在超市购物",
-  ];
+  const suggestedTopics = ["预约酒店", "订机票", "星巴克点单", "去面试跨境电商职位", "去超市购物"];
 
   const renderWordGrid = (words: Word[]) => {
     const displayWords = words.slice(0, 8); // 显示8个单词
@@ -152,6 +146,7 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
                   <input
                     type="text"
                     value={topic}
+                    disabled={isLoading}
                     onChange={(e) => setTopic(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="请输入你想练习的场景"
@@ -160,7 +155,7 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
                   <button
                     onClick={handleCustomGenerate}
                     disabled={isLoading || !topic}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500/20 px-4 py-1.5 text-sm text-blue-400 transition hover:bg-blue-500/30 disabled:opacity-50"
+                    className="absolute right-2 top-1/4 -translate-y-1/2 rounded-md bg-blue-500/20 px-4 py-1.5 text-sm text-blue-400 transition hover:bg-blue-500/30 disabled:opacity-50"
                   >
                     {isLoading ? (
                       <div className="flex items-center space-x-1">
@@ -181,7 +176,7 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
                         </div>
                       </div>
                     ) : (
-                      "生成"
+                      "生成(Enter)"
                     )}
                   </button>
                   <div className="mt-4 flex flex-wrap justify-center gap-2">
