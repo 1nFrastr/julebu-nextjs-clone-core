@@ -102,7 +102,15 @@ export default function Game({ words: initialWords }: GameProps) {
   };
 
   const handleDictionarySelect = (words: Word[]) => {
+    // 重置所有状态，确保切换词库时清除之前的状态
+    setWordIndex(0);
+    setCurrentWord(null);
     setSelectedWords(words);
+    setWrongCount(0);
+    setIsAnswerTipVisible(false);
+    setIsCompleted(false);
+
+    // 最后设置 isStarted，触发游戏开始
     setIsStarted(true);
   };
 

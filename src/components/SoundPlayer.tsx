@@ -2,13 +2,16 @@
 
 import { useCallback } from "react";
 
-// 模拟TTS服务,实际项目中应该使用真实的TTS服务
+// 使用有道词典的在线音频服务
 export const mockSpeak = (text: string) => {
-  if ("speechSynthesis" in window) {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    speechSynthesis.speak(utterance);
-  }
+  console.log("Playing sound for:", text);
+  const audio = new Audio();
+  // type=2 美音，type=1 英音
+  audio.src = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`;
+  
+  return audio.play().catch(error => {
+    console.error("Failed to play audio:", error);
+  });
 };
 
 interface SoundPlayerProps {
