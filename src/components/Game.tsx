@@ -21,15 +21,16 @@ export default function Game({ words }: GameProps) {
   const [isPaused, setIsPaused] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [wrongCount, setWrongCount] = useState(0);
+  const [isStarted, setIsStarted] = useState(false);
   const [playCorrect] = useSound("/sounds/right.mp3");
   const [playWrong] = useSound("/sounds/error.mp3");
 
-  // Initialize first word
+  // Initialize first word when game starts
   useEffect(() => {
-    if (words.length > 0) {
+    if (isStarted && words.length > 0) {
       setCurrentWord(words[0]);
     }
-  }, [words]);
+  }, [words, isStarted]);
 
   // 自动播放单词发音
   useEffect(() => {
@@ -97,6 +98,20 @@ export default function Game({ words }: GameProps) {
   const handleShowAnswer = () => {
     setIsAnswerTipVisible(true);
   };
+
+  if (!isStarted) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h1 className="mb-8 text-3xl font-bold text-gray-700">准备好开始学习了吗？</h1>
+        <button
+          onClick={() => setIsStarted(true)}
+          className="rounded-lg bg-blue-500 px-8 py-3 text-xl text-white hover:bg-blue-600"
+        >
+          开始答题
+        </button>
+      </div>
+    );
+  }
 
   if (!currentWord) {
     return <div>Loading...</div>;
