@@ -33,8 +33,8 @@ export default function GamePauseModal({ onClose }: GamePauseModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl">
-        <h2 className="mb-8 text-2xl font-bold">游戏暂停</h2>
-        <p className="mb-8 text-base text-gray-700">{message}</p>
+        <h2 className="mb-8 text-2xl font-bold text-gray-800">🛑游戏暂停</h2>
+        <p className="mb-8 text-base text-gray-600">{message}</p>
         <div className="flex w-full justify-end">
           <button
             onClick={onClose}
