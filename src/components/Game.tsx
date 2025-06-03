@@ -23,6 +23,7 @@ export default function Game({ words: initialWords }: GameProps) {
   const [isPaused, setIsPaused] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
+  const [wrongCount, setWrongCount] = useState(0);
   const [playCorrect] = useSound("/sounds/right.mp3");
   const [playWrong] = useSound("/sounds/error.mp3");
 
@@ -97,7 +98,14 @@ export default function Game({ words: initialWords }: GameProps) {
   };
 
   const handleShowAnswer = () => {
-    setIsAnswerTipVisible(true);
+    // 如果已经错了很多次，直接显示答案
+    if (wrongCount >= 2) {
+      setIsAnswerTipVisible(true);
+    } else {
+      // 否则重置错误计数
+      setWrongCount(0);
+      setIsAnswerTipVisible(true);
+    }
   };
 
   const handleDictionarySelect = (words: Word[]) => {
@@ -145,7 +153,6 @@ export default function Game({ words: initialWords }: GameProps) {
         {isAnswerTipVisible && (
           <AnswerTip
             word={currentWord}
-            onClose={() => setIsAnswerTipVisible(false)}
           />
         )}
         <Input
@@ -174,7 +181,6 @@ export default function Game({ words: initialWords }: GameProps) {
       {isCompleted && (
         <CompletionModal
           onRestart={handleRestart}
-          onClose={() => setIsCompleted(false)}
         />
       )}
     </div>
