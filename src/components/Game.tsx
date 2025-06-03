@@ -34,15 +34,14 @@ export default function Game({ words }: GameProps) {
   // 自动播放单词发音
   useEffect(() => {
     if (currentWord?.english) {
-      const isNewWord = words.some((w) => w.english === currentWord.english);
-      // 只有是新单词时才播放
-      if (isNewWord) {
+      // 当 wordIndex 为 0 或单词变化时播放
+      if (wordIndex === 0 || currentWord.english !== words[wordIndex - 1]?.english) {
         setTimeout(() => {
           mockSpeak(currentWord.english);
         }, 100);
       }
     }
-  }, [currentWord?.english, words]);
+  }, [currentWord?.english, wordIndex, words]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
