@@ -152,33 +152,6 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
                     placeholder="请输入你想练习的场景"
                     className="w-full rounded-lg border-2 border-blue-500/30 bg-blue-500/5 px-4 py-3 text-lg text-gray-100 placeholder-gray-500 transition focus:border-blue-400 focus:outline-none"
                   />
-                  <button
-                    onClick={handleCustomGenerate}
-                    disabled={isLoading || !topic}
-                    className="absolute right-2 top-1/4 -translate-y-1/2 rounded-md bg-blue-500/20 px-4 py-1.5 text-sm text-blue-400 transition hover:bg-blue-500/30 disabled:opacity-50"
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center space-x-1">
-                        <span>生成中</span>
-                        <div className="flex space-x-0.5">
-                          <div
-                            className="h-1.5 w-1.5 animate-bounce rounded-full bg-blue-400"
-                            style={{ animationDelay: "0ms" }}
-                          ></div>
-                          <div
-                            className="h-1.5 w-1.5 animate-bounce rounded-full bg-blue-400"
-                            style={{ animationDelay: "150ms" }}
-                          ></div>
-                          <div
-                            className="h-1.5 w-1.5 animate-bounce rounded-full bg-blue-400"
-                            style={{ animationDelay: "300ms" }}
-                          ></div>
-                        </div>
-                      </div>
-                    ) : (
-                      "生成(Enter)"
-                    )}
-                  </button>
                   <div className="mt-4 flex flex-wrap justify-center gap-2">
                     {suggestedTopics.map((suggestedTopic) => (
                       <button
@@ -292,15 +265,46 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
         )}
       </div>
 
-      {/* 公共区域的开始练习按钮 */}
+      {/* 底部按钮区域 */}
       <div className="text-center">
-        <button
-          onClick={activeTab === "custom" ? handleCustomDictionary : handleLocalDictionary}
-          disabled={activeTab === "custom" && generatedWords.length === 0}
-          className="w-full max-w-md rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-3 text-xl text-white transition hover:from-blue-600 hover:to-blue-700 disabled:from-blue-800 disabled:to-blue-900 disabled:text-blue-100/50"
-        >
-          开始练习
-        </button>
+        {activeTab === "custom" && !generatedWords.length ? (
+          <button
+            onClick={handleCustomGenerate}
+            disabled={isLoading || !topic}
+            className="w-full max-w-md rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-3 text-xl text-white transition hover:from-blue-600 hover:to-blue-700 disabled:from-blue-800 disabled:to-blue-900 disabled:text-blue-100/50"
+          >
+            {isLoading ? (
+              <div className="flex items-center justify-center space-x-2">
+                <span>生成词库中</span>
+                <div className="flex space-x-0.5">
+                  <div
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-white"
+                    style={{ animationDelay: "0ms" }}
+                  ></div>
+                  <div
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-white"
+                    style={{ animationDelay: "150ms" }}
+                  ></div>
+                  <div
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-white"
+                    style={{ animationDelay: "300ms" }}
+                  ></div>
+                </div>
+              </div>
+            ) : (
+              "生成词库"
+            )}
+          </button>
+        ) : (
+          (activeTab === "local" || (activeTab === "custom" && generatedWords.length > 0)) && (
+            <button
+              onClick={activeTab === "custom" ? handleCustomDictionary : handleLocalDictionary}
+              className="w-full max-w-md rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-3 text-xl text-white transition hover:from-blue-600 hover:to-blue-700"
+            >
+              开始练习
+            </button>
+          )
+        )}
         {error && <p className="mt-2 text-sm text-blue-400">{error}</p>}
       </div>
     </div>
