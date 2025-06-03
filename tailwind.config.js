@@ -8,6 +8,12 @@ module.exports = {
   theme: {
     extend: {
       keyframes: {
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+      },
+      keyframes: {
         shake: {
           "0%, 100%": { transform: "translateX(0)" },
           "25%": { transform: "translateX(-5px)" },

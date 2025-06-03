@@ -6,6 +6,7 @@ import useSound from "use-sound";
 
 import AnswerTip from "./AnswerTip";
 import CompletionModal from "./CompletionModal";
+import DictionarySelector from "./DictionarySelector";
 import GamePauseModal from "./GamePauseModal";
 import Input from "./Input";
 import SoundPlayer, { mockSpeak } from "./SoundPlayer";
@@ -14,7 +15,8 @@ interface GameProps {
   words: Word[];
 }
 
-export default function Game({ words }: GameProps) {
+export default function Game({ words: initialWords }: GameProps) {
+  const [selectedWords, setSelectedWords] = useState<Word[]>(initialWords);
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
   const [wordIndex, setWordIndex] = useState(0);
   const [isAnswerTipVisible, setIsAnswerTipVisible] = useState(false);
@@ -27,22 +29,22 @@ export default function Game({ words }: GameProps) {
 
   // Initialize first word when game starts
   useEffect(() => {
-    if (isStarted && words.length > 0) {
-      setCurrentWord(words[0]);
+    if (isStarted && selectedWords.length > 0) {
+      setCurrentWord(selectedWords[0]);
     }
-  }, [words, isStarted]);
+  }, [selectedWords, isStarted]);
 
   // 自动播放单词发音
   useEffect(() => {
     if (currentWord?.english) {
       // 当 wordIndex 为 0 或单词变化时播放
-      if (wordIndex === 0 || currentWord.english !== words[wordIndex - 1]?.english) {
+      if (wordIndex === 0 || currentWord.english !== selectedWords[wordIndex - 1]?.english) {
         setTimeout(() => {
           mockSpeak(currentWord.english);
         }, 100);
       }
     }
-  }, [currentWord?.english, wordIndex, words]);
+  }, [currentWord?.english, wordIndex, selectedWords]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -64,10 +66,10 @@ export default function Game({ words }: GameProps) {
     playCorrect();
     setTimeout(() => {
       const nextIndex = wordIndex + 1;
-      if (nextIndex >= words.length) {
+      if (nextIndex >= selectedWords.length) {
         setIsCompleted(true);
       } else {
-        setCurrentWord(words[nextIndex]);
+        setCurrentWord(selectedWords[nextIndex]);
         setWordIndex(nextIndex);
       }
       setIsAnswerTipVisible(false);
@@ -77,7 +79,7 @@ export default function Game({ words }: GameProps) {
 
   const handleRestart = () => {
     setWordIndex(0);
-    setCurrentWord(words[0]);
+    setCurrentWord(selectedWords[0]);
     setIsCompleted(false);
     setWrongCount(0);
     setIsAnswerTipVisible(false);
@@ -99,16 +101,18 @@ export default function Game({ words }: GameProps) {
     setIsAnswerTipVisible(true);
   };
 
+  const handleDictionarySelect = (words: Word[]) => {
+    setSelectedWords(words);
+    setIsStarted(true);
+  };
+
   if (!isStarted) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="mb-8 text-3xl font-bold text-gray-700">准备好开始学习了吗？</h1>
-        <button
-          onClick={() => setIsStarted(true)}
-          className="mt-30 rounded-lg bg-blue-500 px-8 py-3 text-xl text-white hover:bg-blue-600"
-        >
-          ▶ 开始答题
-        </button>
+      <div>
+        <h1 className="mb-8 text-center text-3xl font-bold text-gray-700">
+          🌟 欢迎来到单词闯关 🌟
+        </h1>
+        <DictionarySelector onSelect={handleDictionarySelect} />
       </div>
     );
   }
@@ -119,6 +123,18 @@ export default function Game({ words }: GameProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="text-sm text-gray-500">
+          进度: {wordIndex + 1} / {selectedWords.length}
+        </div>
+        <button
+          onClick={() => setIsStarted(false)}
+          className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-300"
+        >
+          切换词库
+        </button>
+      </div>
+
       <div className="mb-8 text-center text-2xl text-gray-600">{currentWord.chinese}</div>
 
       <div className="relative">
