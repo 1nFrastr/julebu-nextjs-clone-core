@@ -150,11 +150,7 @@ export default function Game({ words: initialWords }: GameProps) {
       <div className="mb-8 text-center text-2xl text-gray-600">{currentWord.chinese}</div>
 
       <div className="relative">
-        {isAnswerTipVisible && (
-          <AnswerTip
-            word={currentWord}
-          />
-        )}
+        {isAnswerTipVisible && <AnswerTip word={currentWord} />}
         <Input
           word={currentWord}
           onCorrect={handleCorrect}
@@ -178,11 +174,7 @@ export default function Game({ words: initialWords }: GameProps) {
       </div>
 
       {isPaused && <GamePauseModal onClose={() => setIsPaused(false)} />}
-      {isCompleted && (
-        <CompletionModal
-          onRestart={handleRestart}
-        />
-      )}
+      {isCompleted && <CompletionModal onRestart={handleRestart} />}
     </div>
   );
 }
