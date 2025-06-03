@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import useSound from "use-sound";
 
 import AnswerTip from "./AnswerTip";
+import CompletionModal from "./CompletionModal";
 import GamePauseModal from "./GamePauseModal";
 import Input from "./Input";
 import SoundPlayer, { mockSpeak } from "./SoundPlayer";
@@ -15,8 +16,10 @@ interface GameProps {
 
 export default function Game({ words }: GameProps) {
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
+  const [wordIndex, setWordIndex] = useState(0);
   const [isAnswerTipVisible, setIsAnswerTipVisible] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
   const [wrongCount, setWrongCount] = useState(0);
   const [playCorrect] = useSound("/sounds/right.mp3");
   const [playWrong] = useSound("/sounds/error.mp3");
@@ -24,8 +27,7 @@ export default function Game({ words }: GameProps) {
   // Initialize first word
   useEffect(() => {
     if (words.length > 0) {
-      const randomWord = words[Math.floor(Math.random() * words.length)];
-      setCurrentWord(randomWord);
+      setCurrentWord(words[0]);
     }
   }, [words]);
 
@@ -61,16 +63,24 @@ export default function Game({ words }: GameProps) {
   const handleCorrect = () => {
     playCorrect();
     setTimeout(() => {
-      // 确保下一个单词不重复
-      let randomWord;
-      do {
-        randomWord = words[Math.floor(Math.random() * words.length)];
-      } while (randomWord.english === currentWord?.english && words.length > 1);
-
-      setCurrentWord(randomWord);
+      const nextIndex = wordIndex + 1;
+      if (nextIndex >= words.length) {
+        setIsCompleted(true);
+      } else {
+        setCurrentWord(words[nextIndex]);
+        setWordIndex(nextIndex);
+      }
       setIsAnswerTipVisible(false);
       setWrongCount(0);
     }, 300);
+  };
+
+  const handleRestart = () => {
+    setWordIndex(0);
+    setCurrentWord(words[0]);
+    setIsCompleted(false);
+    setWrongCount(0);
+    setIsAnswerTipVisible(false);
   };
 
   const handleWrong = () => {
@@ -127,6 +137,12 @@ export default function Game({ words }: GameProps) {
       </div>
 
       {isPaused && <GamePauseModal onClose={() => setIsPaused(false)} />}
+      {isCompleted && (
+        <CompletionModal
+          onRestart={handleRestart}
+          onClose={() => setIsCompleted(false)}
+        />
+      )}
     </div>
   );
 }
