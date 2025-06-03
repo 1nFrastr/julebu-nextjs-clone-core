@@ -60,13 +60,15 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
 
   // 输入值变化时更新各部分状态
   useEffect(() => {
+    if (!wordParts.length) return; // 确保wordParts已初始化
+
     const inputs = inputValue.split(" ");
     const newParts = [...wordParts];
 
-    inputs.forEach((input, index) => {
-      if (newParts[index]) {
-        newParts[index].userInput = input;
-      }
+    // 更新每个部分的用户输入
+    newParts.forEach((part, index) => {
+      // 如果没有输入，确保userInput为空字符串而不是undefined
+      part.userInput = inputs[index] || "";
     });
 
     // Update active part based on cursor position
@@ -76,7 +78,7 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
     });
 
     setWordParts(newParts);
-  }, [inputValue]);
+  }, [inputValue, wordParts.length]);
 
   // 键盘事件处理
   const handleKeyDown = (e: React.KeyboardEvent) => {
