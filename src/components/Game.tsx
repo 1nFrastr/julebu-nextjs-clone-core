@@ -105,9 +105,9 @@ export default function Game({ words }: GameProps) {
         <h1 className="mb-8 text-3xl font-bold text-gray-700">准备好开始学习了吗？</h1>
         <button
           onClick={() => setIsStarted(true)}
-          className="rounded-lg bg-blue-500 px-8 py-3 text-xl text-white hover:bg-blue-600"
+          className="mt-30 rounded-lg bg-blue-500 px-8 py-3 text-xl text-white hover:bg-blue-600"
         >
-          开始答题
+          ▶ 开始答题
         </button>
       </div>
     );
