@@ -150,7 +150,7 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
                     onChange={(e) => setTopic(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="请输入你想练习的场景"
-                    className="w-full rounded-lg border-2 border-blue-500/30 bg-blue-500/5 px-4 py-3 text-lg text-gray-600 placeholder-gray-500 transition focus:border-blue-400 focus:outline-none"
+                    className="w-full rounded-lg border-2 border-blue-500/30 bg-blue-500/5 px-4 py-3 text-lg text-gray-900 placeholder-gray-500 transition focus:border-blue-400 focus:outline-none dark:text-gray-100"
                   />
                   <div className="mt-4 flex flex-wrap justify-center gap-2">
                     {suggestedTopics.map((suggestedTopic) => (
