@@ -1,22 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import useSound from "use-sound";
 
 interface GamePauseModalProps {
   onClose: () => void;
 }
 
 export default function GamePauseModal({ onClose }: GamePauseModalProps) {
-  const messages = [
-    "别忘了回来继续练习哦，我在等着你呢！",
-    "休息一下没关系，但别让我等太久！",
-    "快点回来吧，你的英语能力正在蓄势待发！",
-  ];
-
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    const messages = [
+      "别忘了回来继续练习哦，我在等着你呢！",
+      "休息一下没关系，但别让我等太久！",
+      "快点回来吧，你的英语能力正在蓄势待发！",
+    ];
     const randomIndex = Math.floor(Math.random() * messages.length);
     setMessage(messages[randomIndex]);
 

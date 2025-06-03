@@ -3,7 +3,6 @@
 import { useTypingSound } from "@/hooks/useTypingSound";
 import { Word } from "@/types/word";
 import { useEffect, useRef, useState } from "react";
-import useSound from "use-sound";
 
 interface InputProps {
   word: Word;
@@ -63,21 +62,15 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
     if (!wordParts.length) return; // 确保wordParts已初始化
 
     const inputs = inputValue.split(" ");
-    const newParts = [...wordParts];
-
-    // 更新每个部分的用户输入
-    newParts.forEach((part, index) => {
-      // 如果没有输入，确保userInput为空字符串而不是undefined
-      part.userInput = inputs[index] || "";
-    });
-
-    // Update active part based on cursor position
     const cursorPosition = inputRef.current?.selectionStart || 0;
-    newParts.forEach((part) => {
-      part.isActive = cursorPosition >= part.start && cursorPosition <= part.end;
-    });
 
-    setWordParts(newParts);
+    setWordParts((prevParts) => {
+      return prevParts.map((part, index) => ({
+        ...part,
+        userInput: inputs[index] || "",
+        isActive: cursorPosition >= part.start && cursorPosition <= part.end,
+      }));
+    });
   }, [inputValue, wordParts.length]);
 
   // 键盘事件处理

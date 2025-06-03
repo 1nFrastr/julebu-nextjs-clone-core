@@ -1,9 +1,8 @@
 interface CompletionModalProps {
   onRestart: () => void;
-  onClose: () => void;
 }
 
-export default function CompletionModal({ onRestart, onClose }: CompletionModalProps) {
+export default function CompletionModal({ onRestart }: CompletionModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="rounded-lg bg-white p-8 shadow-lg">

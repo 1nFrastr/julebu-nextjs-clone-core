@@ -9,7 +9,7 @@ import CompletionModal from "./CompletionModal";
 import DictionarySelector from "./DictionarySelector";
 import GamePauseModal from "./GamePauseModal";
 import Input from "./Input";
-import SoundPlayer, { mockSpeak } from "./SoundPlayer";
+import { mockSpeak } from "./SoundPlayer";
 
 interface GameProps {
   words: Word[];
@@ -22,7 +22,6 @@ export default function Game({ words: initialWords }: GameProps) {
   const [isAnswerTipVisible, setIsAnswerTipVisible] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [wrongCount, setWrongCount] = useState(0);
   const [isStarted, setIsStarted] = useState(false);
   const [playCorrect] = useSound("/sounds/right.mp3");
   const [playWrong] = useSound("/sounds/error.mp3");

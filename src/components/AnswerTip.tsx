@@ -2,14 +2,11 @@
 
 import { Word } from "@/types/word";
 
-import SoundPlayer from "./SoundPlayer";
-
 interface AnswerTipProps {
   word: Word;
-  onClose: () => void;
 }
 
-export default function AnswerTip({ word, onClose }: AnswerTipProps) {
+export default function AnswerTip({ word }: AnswerTipProps) {
   const words = word.english.split(" ");
 
   return (
