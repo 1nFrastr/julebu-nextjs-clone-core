@@ -1,7 +1,7 @@
 "use client";
 
 import { Word } from "@/types/word";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useSound from "use-sound";
 
 import AnswerTip from "./AnswerTip";
@@ -46,6 +46,18 @@ export default function Game({ words: initialWords }: GameProps) {
     }
   }, [currentWord?.english, wordIndex, selectedWords]);
 
+  const handleNext = useCallback(() => {
+    const nextIndex = wordIndex + 1;
+    if (nextIndex >= selectedWords.length) {
+      setIsCompleted(true);
+    } else {
+      setCurrentWord(selectedWords[nextIndex]);
+      setWordIndex(nextIndex);
+      setIsAnswerTipVisible(false);
+      setWrongCount(0);
+    }
+  }, [wordIndex, selectedWords]);
+
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -53,15 +65,18 @@ export default function Game({ words: initialWords }: GameProps) {
       if (key === "p" && e.altKey) {
         e.preventDefault();
         setIsPaused((prev) => !prev);
-      } else if (key === "m" && e.ctrlKey) {
+      } else if (key === "k" && e.altKey) {
         e.preventDefault();
         setIsAnswerTipVisible((prev) => !prev);
+      } else if (key === "n" && e.altKey) {
+        e.preventDefault();
+        handleNext();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [handleNext]);
 
   const handleCorrect = () => {
     playCorrect();
@@ -189,7 +204,13 @@ export default function Game({ words: initialWords }: GameProps) {
             onClick={handleShowAnswer}
             className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
           >
-            显示答案 (Ctrl+M)
+            显示答案 (Alt+K)
+          </button>
+          <button
+            onClick={handleNext}
+            className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
+          >
+            下一个 (Alt+N)
           </button>
           <button
             onClick={() => setIsPaused(true)}
