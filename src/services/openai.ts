@@ -21,41 +21,19 @@ const config: ClientOptions = {
 
 const openaiClient = new OpenAI(config);
 
-const WORD_LIST_PROMPT = `
-作为一个英语教育专家，请根据用户给定的主题生成一个相关的英语单词列表。
+const WORD_LIST_PROMPT = `生成{{count}}个与"{{topic}}"主题相关的英语单词。
 
-要求:
-1. 单词要与主题高度相关
-2. 单词难度要适中，避免过于生僻的词
-3. 中文释义要准确且符合主题场景
-4. 音标必须准确规范，且必须使用引号包裹
+输出格式要求：
+每行一个单词，格式为：英文单词|中文含义
+示例：
+coffee|咖啡
+tea|茶
 
-输出格式要求(JSON):
-{
-  "words": [
-    {
-      "english": "coffee",
-      "chinese": "咖啡",
-      "soundmark": "/ˈkɒfi/"
-    }
-  ]
-}
-
-主题场景示例：
-- 如果是"打车"主题，应该包含: taxi (/ˈtæksi/), driver (/ˈdraɪvə/), destination (/ˌdestɪˈneɪʃn/) 等相关词汇
-- 如果是"酒店"主题，应该包含: check-in (/tʃek ɪn/), reservation (/ˌrezəˈveɪʃn/), suite (/swiːt/) 等相关词汇  
-- 如果是"托福/雅思"主题，应该包含常见的学术类词汇
-
-请根据以下信息生成单词列表:
-主题: {{topic}}
-所需单词数量: {{count}}
-
-注意:
-- 确保输出为有效的 JSON 格式
-- 所有单词必须与主题相关
-- 不要重复单词
-- 音标必须用引号包裹（如 "/ˈkɒfi/"），否则会导致 JSON 解析错误
-- 中文释义要简洁明了
+要求：
+- 单词要贴合主题且难度适中
+- 首字母不需要大写，除非必要
+- 中文释义要简洁准确
+- 每行必须包含英文、中文，用|分隔
 `;
 
 export async function generateWordList(
@@ -73,8 +51,7 @@ export async function generateWordList(
         },
       ],
       model: "doubao-lite-4k-character-240828",
-      temperature: 0.7,
-      response_format: { type: "json_object" },
+      temperature: 0.3, // 降低随机性，提高生成速度
     });
 
     const response = completion.choices[0].message.content;
@@ -83,19 +60,22 @@ export async function generateWordList(
     }
 
     try {
-      const parsedResponse = JSON.parse(response) as GenerateWordListResponse;
-      if (!parsedResponse.words || !Array.isArray(parsedResponse.words)) {
-        throw new Error("AI 响应格式错误");
+      // 将文本格式转换为 JSON 格式
+      const words = response.split('\n')
+        .filter(line => line.trim()) // 移除空行
+        .map(line => {
+          const [english, chinese] = line.split('|').map(s => s.trim());
+          if (!english || !chinese) {
+            throw new Error(`单词数据格式不完整: ${line}`);
+          }
+          return { english, chinese, soundmark: "" }; // soundmark 目前为空字符串
+        });
+
+      if (words.length === 0) {
+        throw new Error("未生成任何单词");
       }
 
-      // 验证每个单词的格式
-      parsedResponse.words.forEach((word, index) => {
-        if (!word.english || !word.chinese || !word.soundmark) {
-          throw new Error(`第 ${index + 1} 个单词数据格式不完整`);
-        }
-      });
-
-      return parsedResponse;
+      return { words };
     } catch (e) {
       if (e instanceof Error) {
         throw new Error(`解析 AI 响应失败: ${e.message}`);
