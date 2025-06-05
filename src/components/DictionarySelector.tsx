@@ -3,6 +3,7 @@
 import { sampleWords } from "@/data/words";
 import { generateSuggestedTopics, generateWordList } from "@/services/openai";
 import { Word } from "@/types/word";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 
 interface DictionarySelectorProps {
@@ -22,19 +23,21 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
   ]);
   const [isLoadingTopics, setIsLoadingTopics] = useState(true);
 
+  // 加载推荐场景
+  const loadSuggestedTopics = async () => {
+    setIsLoadingTopics(true);
+    try {
+      const topics = await generateSuggestedTopics();
+      setSuggestedTopics(topics);
+    } catch (err) {
+      console.error("加载推荐场景失败:", err);
+    } finally {
+      setIsLoadingTopics(false);
+    }
+  };
+
   // 初始化推荐场景
   useEffect(() => {
-    const loadSuggestedTopics = async () => {
-      try {
-        const topics = await generateSuggestedTopics();
-        setSuggestedTopics(topics);
-      } catch (err) {
-        console.error("加载推荐场景失败:", err);
-      } finally {
-        setIsLoadingTopics(false);
-      }
-    };
-
     loadSuggestedTopics();
   }, []);
 
@@ -184,15 +187,25 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
                         </div>
                       </div>
                     ) : (
-                      suggestedTopics.map((suggestedTopic) => (
+                      <>
+                        {suggestedTopics.map((suggestedTopic) => (
+                          <button
+                            key={suggestedTopic}
+                            onClick={() => setTopic(suggestedTopic)}
+                            className="rounded-full border-2 border-blue-500/20 px-4 py-1.5 text-sm text-blue-400 transition hover:bg-blue-500/10"
+                          >
+                            {suggestedTopic}
+                          </button>
+                        ))}
                         <button
-                          key={suggestedTopic}
-                          onClick={() => setTopic(suggestedTopic)}
-                          className="rounded-full border-2 border-blue-500/20 px-4 py-1.5 text-sm text-blue-400 transition hover:bg-blue-500/10"
+                          onClick={loadSuggestedTopics}
+                          disabled={isLoadingTopics}
+                          className="flex items-center gap-1 rounded-full border-2 border-blue-500/50 px-4 py-1.5 text-sm text-white transition hover:bg-blue-600/80 disabled:opacity-50 disabled:cursor-not-allowed bg-blue-500/80"
                         >
-                          {suggestedTopic}
+                          <ArrowPathIcon className="h-4 w-4" />
+                          换一批
                         </button>
-                      ))
+                      </>
                     )}
                   </div>
                 </div>
