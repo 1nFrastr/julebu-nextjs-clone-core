@@ -33,10 +33,12 @@ coffee|咖啡
 tea|茶
 
 要求：
+- 必须严格生成{{count}}个单词，不能多也不能少
 - 单词要贴合主题且难度适中
 - 首字母不需要大写，除非必要
 - 中文释义要简洁准确
 - 每行必须包含英文、中文，用|分隔
+- 请确保没有重复的单词
 `;
 
 export async function generateWordList(
@@ -64,7 +66,7 @@ export async function generateWordList(
 
     try {
       // 将文本格式转换为 JSON 格式
-      const words = response.split('\n')
+      let words = response.split('\n')
         .filter(line => line.trim()) // 移除空行
         .map(line => {
           const [english, chinese] = line.split('|').map(s => s.trim());
@@ -76,6 +78,17 @@ export async function generateWordList(
 
       if (words.length === 0) {
         throw new Error("未生成任何单词");
+      }
+
+      // 如果生成的单词数量超过要求，随机选择指定数量的单词
+      if (words.length > count) {
+        words = words
+          .sort(() => Math.random() - 0.5) // 随机打乱顺序
+          .slice(0, count); // 截取需要的数量
+      } 
+      // 如果生成的单词数量不足，抛出错误
+      else if (words.length < count) {
+        throw new Error(`生成的单词数量不足，需要 ${count} 个，但只生成了 ${words.length} 个`);
       }
 
       return { words };
