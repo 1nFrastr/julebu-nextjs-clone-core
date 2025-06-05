@@ -103,20 +103,23 @@ export async function generateWordList(
   }
 }
 
-const SUGGEST_TOPICS_PROMPT = `请生成10个日常英语学习场景建议。这些场景应该是人们在生活中常见的英语交流场景。
+const SUGGEST_TOPICS_PROMPT = `请生成多个新颖且多样化的日常生活场景建议。每次生成的场景要尽量不同，覆盖不同的生活领域。
 
 输出格式要求：
-每行一个场景（中文），一行一个场景
-示例：
-在咖啡店点单
-在酒店办理入住
-在机场办理登机
+所有场景用竖线(|)分隔，输出为单行文本
+示例：餐厅点餐|机场值机|酒店入住
 
 要求：
-- 场景要贴近日常生活
-- 描述要简洁明了
-- 场景要具体实用
-- 每行只输出一个场景名称`;
+- 生成8-12个场景
+- 每次生成要有新意，避免总是相似的场景
+- 可以包含传统场景和新兴场景的组合
+- 考虑当代生活中的各种情境（如远程工作、社交媒体、在线购物等）
+- 每个场景名称控制在10个中文之内
+- 每个场景名称不要出现"英语"或"对话"等字样
+- 严格按照竖线分隔符格式输出
+
+当前时间: ${new Date().toISOString()}
+提示：利用时间信息随机选择不同的场景组合`;
 
 export async function generateSuggestedTopics(): Promise<string[]> {
   try {
@@ -128,12 +131,13 @@ export async function generateSuggestedTopics(): Promise<string[]> {
         },
       ],
       model: MODEL_NAME,
-      temperature: 0.7,
-      max_tokens: 300,
+      temperature: 0.95, // 提高随机性
+      presence_penalty: 0.6, // 降低重复内容的可能性
+      frequency_penalty: 0.8, // 鼓励使用更多样的词汇
     });
 
     const content = completion.choices[0]?.message?.content || "";
-    return content.split("\n").filter(topic => topic.trim().length > 0);
+    return content.split("|").map(topic => topic.trim()).filter(topic => topic.length > 0);
   } catch (error) {
     console.error("生成推荐场景失败:", error);
     // 返回默认场景列表
