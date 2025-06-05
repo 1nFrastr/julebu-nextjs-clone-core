@@ -12,8 +12,8 @@ export type GenerateWordListResponse = {
 
 // 自定义配置初始化
 const config: ClientOptions = {
-  apiKey: "hk-8lze3v36h734mq6ckgqw2hvs7ej8tjdc7abume6sbe2ki5rt",
-  baseURL: "https://api.openai-hk.com/v1",
+  apiKey: "b53fc557-8a3b-4db6-a4e6-91fb9a8066ae",
+  baseURL: "https://ark.cn-beijing.volces.com/api/v3",
   timeout: 30000, // 30秒超时
   maxRetries: 3, // 最大重试次数
   dangerouslyAllowBrowser: true, // 允许在浏览器环境中使用
@@ -28,22 +28,22 @@ const WORD_LIST_PROMPT = `
 1. 单词要与主题高度相关
 2. 单词难度要适中，避免过于生僻的词
 3. 中文释义要准确且符合主题场景
-4. 音标必须准确规范
+4. 音标必须准确规范，且必须使用引号包裹
 
 输出格式要求(JSON):
 {
   "words": [
     {
-      "english": "单词",
-      "chinese": "释义",
-      "soundmark": "音标" // 使用国际音标(IPA)
+      "english": "coffee",
+      "chinese": "咖啡",
+      "soundmark": "/ˈkɒfi/"
     }
   ]
 }
 
 主题场景示例：
-- 如果是"打车"主题，应该包含: taxi, driver, destination, fare 等相关词汇
-- 如果是"酒店"主题，应该包含: check-in, reservation, suite, lobby 等相关词汇  
+- 如果是"打车"主题，应该包含: taxi (/ˈtæksi/), driver (/ˈdraɪvə/), destination (/ˌdestɪˈneɪʃn/) 等相关词汇
+- 如果是"酒店"主题，应该包含: check-in (/tʃek ɪn/), reservation (/ˌrezəˈveɪʃn/), suite (/swiːt/) 等相关词汇  
 - 如果是"托福/雅思"主题，应该包含常见的学术类词汇
 
 请根据以下信息生成单词列表:
@@ -54,7 +54,7 @@ const WORD_LIST_PROMPT = `
 - 确保输出为有效的 JSON 格式
 - 所有单词必须与主题相关
 - 不要重复单词
-- 确保音标准确无误
+- 音标必须用引号包裹（如 "/ˈkɒfi/"），否则会导致 JSON 解析错误
 - 中文释义要简洁明了
 `;
 
@@ -72,7 +72,7 @@ export async function generateWordList(
           content: prompt,
         },
       ],
-      model: "gpt-4o-mini",
+      model: "doubao-lite-4k-character-240828",
       temperature: 0.7,
       response_format: { type: "json_object" },
     });
