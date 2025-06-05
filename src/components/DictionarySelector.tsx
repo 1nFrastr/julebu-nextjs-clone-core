@@ -60,7 +60,7 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
     }
   };
 
-  const suggestedTopics = ["预约酒店", "订机票", "星巴克点单", "去面试跨境电商职位", "去超市购物"];
+  const suggestedTopics = ["预约酒店", "订机票", "星巴克点单", "面试跨境电商运营", "超市购物"];
 
   const renderWordGrid = (words: Word[]) => {
     const displayWords = words.slice(0, 8); // 显示8个单词
