@@ -68,7 +68,7 @@ export default function Game({ words: initialWords }: GameProps) {
       } else if (key === "k" && e.altKey) {
         e.preventDefault();
         setIsAnswerTipVisible((prev) => !prev);
-      } else if (key === "n" && e.altKey) {
+      } else if (key === "l" && e.altKey) {
         e.preventDefault();
         handleNext();
       }
@@ -199,22 +199,22 @@ export default function Game({ words: initialWords }: GameProps) {
           />
         </div>
 
-        <div className="mt-8 flex justify-center space-x-4">
+        <div className="mt-12 flex justify-center space-x-4">
           <button
             onClick={handleShowAnswer}
-            className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
+            className="rounded-lg border border-gray-600/10 bg-gray-600/5 px-4 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-600/10 hover:text-gray-600"
           >
             显示答案 (Alt+K)
           </button>
           <button
             onClick={handleNext}
-            className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
+            className="rounded-lg border border-gray-600/10 bg-gray-600/5 px-4 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-600/10 hover:text-gray-600"
           >
-            下一个 (Alt+N)
+            下一个 (Alt+L)
           </button>
           <button
             onClick={() => setIsPaused(true)}
-            className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
+            className="rounded-lg border border-gray-600/10 bg-gray-600/5 px-4 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-600/10 hover:text-gray-600"
           >
             暂停 (Alt+P)
           </button>
