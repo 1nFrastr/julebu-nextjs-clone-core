@@ -1,7 +1,7 @@
 "use client";
 
 import { sampleWords } from "@/data/words";
-import { generateWordList } from "@/services/openai";
+import { generateSuggestedTopics, generateWordList } from "@/services/openai";
 import { Word } from "@/types/word";
 import { useEffect, useState } from "react";
 
@@ -17,6 +17,26 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
   const [activeTab, setActiveTab] = useState<"custom" | "local">("custom");
   const [previewWords, setPreviewWords] = useState<Word[]>([]);
   const [generatedWords, setGeneratedWords] = useState<Word[]>([]);
+  const [suggestedTopics, setSuggestedTopics] = useState<string[]>([
+    "正在加载推荐场景...",
+  ]);
+  const [isLoadingTopics, setIsLoadingTopics] = useState(true);
+
+  // 初始化推荐场景
+  useEffect(() => {
+    const loadSuggestedTopics = async () => {
+      try {
+        const topics = await generateSuggestedTopics();
+        setSuggestedTopics(topics);
+      } catch (err) {
+        console.error("加载推荐场景失败:", err);
+      } finally {
+        setIsLoadingTopics(false);
+      }
+    };
+
+    loadSuggestedTopics();
+  }, []);
 
   // 初始化预览单词
   useEffect(() => {
@@ -59,8 +79,6 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
       handleCustomGenerate();
     }
   };
-
-  const suggestedTopics = ["预约酒店", "订机票", "星巴克点单", "面试跨境电商运营", "超市购物"];
 
   const renderWordGrid = (words: Word[]) => {
     const displayWords = words.slice(0, 8); // 显示8个单词
@@ -153,15 +171,29 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
                     className="w-full rounded-lg border-2 border-blue-500/30 bg-blue-500/5 px-4 py-3 text-lg text-gray-900 placeholder-gray-500 transition focus:border-blue-400 focus:outline-none dark:text-gray-100"
                   />
                   <div className="mt-4 flex flex-wrap justify-center gap-2">
-                    {suggestedTopics.map((suggestedTopic) => (
-                      <button
-                        key={suggestedTopic}
-                        onClick={() => setTopic(suggestedTopic)}
-                        className="rounded-full border-2 border-blue-500/20 px-4 py-1.5 text-sm text-blue-400 transition hover:bg-blue-500/10"
-                      >
-                        {suggestedTopic}
-                      </button>
-                    ))}
+                    {isLoadingTopics ? (
+                      <div className="flex items-center text-blue-400">
+                        <span>正在加载推荐场景</span>
+                        <div className="flex space-x-0.5 ml-2">
+                          <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-blue-400" 
+                               style={{ animationDelay: "0ms" }}></div>
+                          <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-blue-400" 
+                               style={{ animationDelay: "150ms" }}></div>
+                          <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-blue-400" 
+                               style={{ animationDelay: "300ms" }}></div>
+                        </div>
+                      </div>
+                    ) : (
+                      suggestedTopics.map((suggestedTopic) => (
+                        <button
+                          key={suggestedTopic}
+                          onClick={() => setTopic(suggestedTopic)}
+                          className="rounded-full border-2 border-blue-500/20 px-4 py-1.5 text-sm text-blue-400 transition hover:bg-blue-500/10"
+                        >
+                          {suggestedTopic}
+                        </button>
+                      ))
+                    )}
                   </div>
                 </div>
 

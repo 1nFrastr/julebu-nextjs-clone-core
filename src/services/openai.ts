@@ -2,6 +2,9 @@ import type { ClientOptions } from "openai";
 
 import OpenAI from "openai";
 
+// 统一使用的模型名称
+const MODEL_NAME = "doubao-lite-4k-character-240828";
+
 export type GenerateWordListResponse = {
   words: Array<{
     english: string;
@@ -50,7 +53,7 @@ export async function generateWordList(
           content: prompt,
         },
       ],
-      model: "doubao-lite-4k-character-240828",
+      model: MODEL_NAME,
       temperature: 0.3, // 降低随机性，提高生成速度
     });
 
@@ -97,5 +100,43 @@ export async function generateWordList(
       throw new Error(`生成词库失败: ${error.message}`);
     }
     throw new Error("生成词库时发生未知错误");
+  }
+}
+
+const SUGGEST_TOPICS_PROMPT = `请生成10个日常英语学习场景建议。这些场景应该是人们在生活中常见的英语交流场景。
+
+输出格式要求：
+每行一个场景（中文），一行一个场景
+示例：
+在咖啡店点单
+在酒店办理入住
+在机场办理登机
+
+要求：
+- 场景要贴近日常生活
+- 描述要简洁明了
+- 场景要具体实用
+- 每行只输出一个场景名称`;
+
+export async function generateSuggestedTopics(): Promise<string[]> {
+  try {
+    const completion = await openaiClient.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content: SUGGEST_TOPICS_PROMPT,
+        },
+      ],
+      model: MODEL_NAME,
+      temperature: 0.7,
+      max_tokens: 300,
+    });
+
+    const content = completion.choices[0]?.message?.content || "";
+    return content.split("\n").filter(topic => topic.trim().length > 0);
+  } catch (error) {
+    console.error("生成推荐场景失败:", error);
+    // 返回默认场景列表
+    return ["面试英语对话", "餐厅点餐", "机场值机", "酒店入住", "购物交流"];
   }
 }
