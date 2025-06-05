@@ -78,12 +78,37 @@ export default function Game({ words: initialWords }: GameProps) {
     }, 300);
   };
 
+  // 打乱单词顺序的函数
+  const shuffleWords = (words: Word[]): Word[] => {
+    const shuffled = [...words];
+    // 先获取上一轮的最后一个单词
+    const lastWord = shuffled[wordIndex];
+    
+    // Fisher-Yates 洗牌算法
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // 如果打乱后的第一个单词和上一轮的最后一个单词相同
+    if (shuffled[0].english === lastWord.english) {
+      // 找到一个不是第一位也不是最后一位的随机位置
+      const randomPosition = Math.floor(Math.random() * (shuffled.length - 2)) + 1;
+      // 将第一个单词和随机位置的单词交换
+      [shuffled[0], shuffled[randomPosition]] = [shuffled[randomPosition], shuffled[0]];
+    }
+
+    return shuffled;
+  };
+
   const handleRestart = () => {
+    const shuffledWords = shuffleWords(selectedWords);
+    setSelectedWords(shuffledWords);
+    setCurrentWord(shuffledWords[0]);
     setWordIndex(0);
-    setCurrentWord(selectedWords[0]);
+    setIsAnswerTipVisible(false);
     setIsCompleted(false);
     setWrongCount(0);
-    setIsAnswerTipVisible(false);
   };
 
   const handleWrong = () => {
@@ -135,47 +160,52 @@ export default function Game({ words: initialWords }: GameProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-4 flex items-center justify-between">
-        <div className="text-sm text-gray-500">
-          进度: {wordIndex + 1} / {selectedWords.length}
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="text-sm text-gray-500">
+            进度: {wordIndex + 1} / {selectedWords.length}
+          </div>
+          <button
+            onClick={() => setIsStarted(false)}
+            className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-300"
+          >
+            切换词库
+          </button>
         </div>
-        <button
-          onClick={() => setIsStarted(false)}
-          className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-300"
-        >
-          切换词库
-        </button>
-      </div>
 
-      <div className="mb-8 text-center text-2xl text-gray-600">{currentWord.chinese}</div>
+        <div className="mb-8 text-center text-2xl text-gray-600">{currentWord.chinese}</div>
 
-      <div className="relative">
-        {isAnswerTipVisible && <AnswerTip word={currentWord} />}
-        <Input
-          word={currentWord}
-          onCorrect={handleCorrect}
-          onWrong={handleWrong}
-        />
-      </div>
+        <div className="relative">
+          {isAnswerTipVisible && <AnswerTip word={currentWord} />}
+          <Input
+            word={currentWord}
+            onCorrect={handleCorrect}
+            onWrong={handleWrong}
+          />
+        </div>
 
-      <div className="mt-8 flex justify-center space-x-4">
-        <button
-          onClick={handleShowAnswer}
-          className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
-        >
-          显示答案 (Ctrl+M)
-        </button>
-        <button
-          onClick={() => setIsPaused(true)}
-          className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
-        >
-          暂停 (Alt+P)
-        </button>
-      </div>
+        <div className="mt-8 flex justify-center space-x-4">
+          <button
+            onClick={handleShowAnswer}
+            className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
+          >
+            显示答案 (Ctrl+M)
+          </button>
+          <button
+            onClick={() => setIsPaused(true)}
+            className="rounded-lg bg-gray-300 px-4 py-2 text-xs text-gray-700 hover:bg-gray-300"
+          >
+            暂停 (Alt+P)
+          </button>
+        </div>
 
-      {isPaused && <GamePauseModal onClose={() => setIsPaused(false)} />}
-      {isCompleted && <CompletionModal onRestart={handleRestart} />}
+        {isPaused && <GamePauseModal onClose={() => setIsPaused(false)} />}
+        {isCompleted && (
+          <CompletionModal
+            onRestart={handleRestart}
+            onBackToHome={() => setIsStarted(false)}
+          />
+        )}
     </div>
   );
 }
