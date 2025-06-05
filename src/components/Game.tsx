@@ -49,10 +49,11 @@ export default function Game({ words: initialWords }: GameProps) {
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "p" && e.altKey) {
+      const key = e.key.toLowerCase(); // 转换按键为小写
+      if (key === "p" && e.altKey) {
         e.preventDefault();
         setIsPaused((prev) => !prev);
-      } else if (e.key === "m" && e.ctrlKey) {
+      } else if (key === "m" && e.ctrlKey) {
         e.preventDefault();
         setIsAnswerTipVisible((prev) => !prev);
       }

@@ -31,9 +31,9 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
     inputRef.current?.focus();
   }, []);
 
-  // 初始化单词分割
+  // 初始化单词分割，转换为小写以便比较
   useEffect(() => {
-    const parts = word.english.split(" ").map((text, id) => ({
+    const parts = word.english.toLowerCase().split(" ").map((text, id) => ({
       text,
       isActive: id === 0,
       userInput: "",
@@ -93,8 +93,8 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
 
   // 检查答案
   const checkAnswer = () => {
-    const userAnswer = inputValue.trim();
-    const correctAnswer = word.english.trim();
+    const userAnswer = inputValue.trim().toLowerCase();
+    const correctAnswer = word.english.trim().toLowerCase();
     if (userAnswer === correctAnswer) {
       onCorrect();
     } else {
@@ -116,7 +116,7 @@ export default function Input({ word, onCorrect, onWrong }: InputProps) {
   const markIncorrectWords = () => {
     const newParts = [...wordParts];
     newParts.forEach((part) => {
-      part.incorrect = part.userInput !== part.text;
+      part.incorrect = part.userInput.toLowerCase() !== part.text.toLowerCase();
     });
     setWordParts(newParts);
   };
