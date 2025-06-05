@@ -219,7 +219,7 @@ export default function DictionarySelector({ onSelect }: DictionarySelectorProps
                       max="50"
                       value={wordCount}
                       onChange={(e) => setWordCount(parseInt(e.target.value))}
-                      className="w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-blue-500/20 [&::-webkit-slider-thumb]:-mt-1 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-400 [&::-webkit-slider-thumb]:transition hover:[&::-webkit-slider-thumb]:bg-blue-300"
+                      className="w-full h-8 cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-blue-500/20 [&::-webkit-slider-thumb]:-mt-2 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-400 [&::-webkit-slider-thumb]:transition hover:[&::-webkit-slider-thumb]:bg-blue-300"
                     />
                     <div className="mt-1 flex justify-between px-1 text-xs text-gray-500">
                       <span>5</span>
