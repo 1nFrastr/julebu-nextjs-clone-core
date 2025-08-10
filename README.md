@@ -6,11 +6,11 @@
 
 ## 📺 应用预览
 
-### AI场景练习模式
-🎬 **演示视频**：[点击查看AI场景练习模式演示](https://github.com/user-attachments/assets/ai-scenairo-practice.mp4)
-
 ### 本地词库练习模式
 ![本地词库练习](.assets/local-practice.gif)
+
+### AI场景练习模式
+🎬 **演示视频**：[点击查看AI场景练习模式演示](https://github.com/1nFrastr/julebu-nextjs-clone-core/blob/main/.assets/ai-scenairo-practice.mp4)
 
 ## ✨ 核心功能
 

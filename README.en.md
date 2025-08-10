@@ -4,6 +4,14 @@
 
 An immersive English word typing practice application based on Next.js, featuring AI-generated personalized learning content to make vocabulary learning more interesting and efficient.
 
+## 📺 Application Preview
+
+### Local Dictionary Practice Mode
+![Local Dictionary Practice](.assets/local-practice.gif)
+
+### AI Scenario Practice Mode
+🎬 **Demo Video**: [Click to view AI Scenario Practice Mode demonstration](https://github.com/1nFrastr/julebu-nextjs-clone-core/blob/main/.assets/ai-scenairo-practice.mp4)
+
 ## ✨ Core Features
 
 ### 🎯 Immersive Typing Practice for Vocabulary Learning
