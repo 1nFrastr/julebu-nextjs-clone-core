@@ -10,6 +10,7 @@ import DictionarySelector from "./DictionarySelector";
 import GamePauseModal from "./GamePauseModal";
 import Input from "./Input";
 import { mockSpeak } from "./SoundPlayer";
+import WordList from "./WordList";
 
 interface GameProps {
   words: Word[];
@@ -57,6 +58,16 @@ export default function Game({ words: initialWords }: GameProps) {
       setWrongCount(0);
     }
   }, [wordIndex, selectedWords]);
+
+  // Handle jumping to specific word
+  const handleWordClick = useCallback((index: number) => {
+    if (index >= 0 && index < selectedWords.length) {
+      setCurrentWord(selectedWords[index]);
+      setWordIndex(index);
+      setIsAnswerTipVisible(false);
+      setWrongCount(0);
+    }
+  }, [selectedWords]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -175,58 +186,72 @@ export default function Game({ words: initialWords }: GameProps) {
   }
 
   return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="text-sm text-gray-500">
-            进度: {wordIndex + 1} / {selectedWords.length}
+    <div className="relative min-h-screen">
+      {/* 侧边栏词库列表 */}
+      <WordList
+        words={selectedWords}
+        currentIndex={wordIndex}
+        onWordClick={handleWordClick}
+      />
+
+      {/* 主内容区域 - 添加左边距为侧边栏留出空间 */}
+      <div className="main-content ml-80 transition-all duration-300">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="text-sm text-gray-500">
+              进度: {wordIndex + 1} / {selectedWords.length}
+            </div>
+            <button
+              onClick={() => setIsStarted(false)}
+              className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-300"
+            >
+              切换词库
+            </button>
           </div>
-          <button
-            onClick={() => setIsStarted(false)}
-            className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-300"
-          >
-            切换词库
-          </button>
+
+          <div className="mx-auto max-w-2xl">
+            <div className="mb-8 text-center text-2xl text-gray-600">{currentWord.chinese}</div>
+
+            <div className="relative">
+              {isAnswerTipVisible && <AnswerTip word={currentWord} />}
+              <Input
+                word={currentWord}
+                onCorrect={handleCorrect}
+                onWrong={handleWrong}
+              />
+            </div>
+
+            <div className="mt-12 flex justify-center space-x-4">
+              <button
+                onClick={handleShowAnswer}
+                className="rounded-lg border border-gray-600/10 bg-gray-600/5 px-4 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-600/10 hover:text-gray-600"
+              >
+                显示答案 (Alt+K)
+              </button>
+              <button
+                onClick={handleNext}
+                className="rounded-lg border border-gray-600/10 bg-gray-600/5 px-4 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-600/10 hover:text-gray-600"
+              >
+                下一个 (Alt+L)
+              </button>
+              <button
+                onClick={() => setIsPaused(true)}
+                className="rounded-lg border border-gray-600/10 bg-gray-600/5 px-4 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-600/10 hover:text-gray-600"
+              >
+                暂停 (Alt+P)
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div className="mb-8 text-center text-2xl text-gray-600">{currentWord.chinese}</div>
-
-        <div className="relative">
-          {isAnswerTipVisible && <AnswerTip word={currentWord} />}
-          <Input
-            word={currentWord}
-            onCorrect={handleCorrect}
-            onWrong={handleWrong}
-          />
-        </div>
-
-        <div className="mt-12 flex justify-center space-x-4">
-          <button
-            onClick={handleShowAnswer}
-            className="rounded-lg border border-gray-600/10 bg-gray-600/5 px-4 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-600/10 hover:text-gray-600"
-          >
-            显示答案 (Alt+K)
-          </button>
-          <button
-            onClick={handleNext}
-            className="rounded-lg border border-gray-600/10 bg-gray-600/5 px-4 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-600/10 hover:text-gray-600"
-          >
-            下一个 (Alt+L)
-          </button>
-          <button
-            onClick={() => setIsPaused(true)}
-            className="rounded-lg border border-gray-600/10 bg-gray-600/5 px-4 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-600/10 hover:text-gray-600"
-          >
-            暂停 (Alt+P)
-          </button>
-        </div>
-
-        {isPaused && <GamePauseModal onClose={() => setIsPaused(false)} />}
-        {isCompleted && (
-          <CompletionModal
-            onRestart={handleRestart}
-            onBackToHome={() => setIsStarted(false)}
-          />
-        )}
+      {isPaused && <GamePauseModal onClose={() => setIsPaused(false)} />}
+      {isCompleted && (
+        <CompletionModal
+          onRestart={handleRestart}
+          onBackToHome={() => setIsStarted(false)}
+        />
+      )}
     </div>
   );
 }
