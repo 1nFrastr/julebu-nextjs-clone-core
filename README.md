@@ -10,7 +10,9 @@
 ![本地词库练习](.assets/local-practice.gif)
 
 ### AI场景练习模式
-🎬 **演示视频**：[点击查看AI场景练习模式演示](https://github.com/1nFrastr/julebu-nextjs-clone-core/blob/main/.assets/ai-scenairo-practice.mp4)
+🎬 **演示视频**
+
+https://github.com/user-attachments/assets/6be9eb10-e39e-40d8-be63-5cb1566b77df
 
 ## ✨ 核心功能
 
